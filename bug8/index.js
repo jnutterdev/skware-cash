@@ -4,10 +4,10 @@
 //   string representing the transactions
 //*******************************************************
 function renderTransactions(transactions) {
-	var finalHTML = '<div class="buffer">TRANSACTIONS</div>';
+    var finalHTML = '<div class="buffer">TRANSACTIONS</div>';
 
-	var transactionsHTML = transactions.map(function (transaction) {
-		var transactionHTML = `
+    var transactionsHTML = transactions.map(function(transaction) {
+        var transactionHTML = `
 		<div class="transaction">
 			<div class="name">${transaction.name}</div>
 			<div class="for">${transaction.for}</div>
@@ -15,12 +15,12 @@ function renderTransactions(transactions) {
 			<div class="amount">${transaction.amount}</div>
 		</div>
 		`
-		return transactionHTML;
-	});
+        return transactionHTML;
+    });
 
-	finalHTML += transactionsHTML.join('');
+    finalHTML += transactionsHTML.join('');
 
-	return finalHTML;
+    return finalHTML;
 }
 
 //*******************************************************
@@ -28,20 +28,20 @@ function renderTransactions(transactions) {
 //   Listens for keyboard input to filter the list of 
 //   transactions based on the search string. 
 //*******************************************************
-document.addEventListener("DOMContentLoaded", function () {
-	document.getElementById('transactions').innerHTML = renderTransactions(fullTransactionData);
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById('transactions').innerHTML = renderTransactions(fullTransactionData);
+    // search was filtering by 'change' and not 'input'
+    document.getElementById('search-input').addEventListener('input', function(e) {
+        var searchString = e.target.value.toLowerCase();
+        var filteredData = fullTransactionData.filter(function(transaction) {
+            var foundInName = transaction.name.toLowerCase().indexOf(searchString) > -1;
+            var foundInFor = transaction.for.toLowerCase().indexOf(searchString) > -1;
+            var foundInDate = transaction.date.toLowerCase().indexOf(searchString) > -1;
+            var foundInAmount = transaction.amount.toLowerCase().indexOf(searchString) > -1;
+            return foundInName || foundInFor || foundInDate || foundInAmount;
+        });
 
-	document.getElementById('search-input').addEventListener('change', function (e) {
-		var searchString = e.target.value.toLowerCase();
-		var filteredData = fullTransactionData.filter(function (transaction) {
-			var foundInName = transaction.name.toLowerCase().indexOf(searchString) > -1;
-			var foundInFor = transaction.for.toLowerCase().indexOf(searchString) > -1;
-			var foundInDate = transaction.date.toLowerCase().indexOf(searchString) > -1;
-			var foundInAmount = transaction.amount.toLowerCase().indexOf(searchString) > -1;
-			return foundInName || foundInFor || foundInDate || foundInAmount;
-		});
-
-		document.getElementById('transactions').innerHTML = renderTransactions(filteredData);
-	});
+        document.getElementById('transactions').innerHTML = renderTransactions(filteredData);
+    });
 
 });
